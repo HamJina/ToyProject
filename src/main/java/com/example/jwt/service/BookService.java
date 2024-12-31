@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,5 +27,16 @@ public class BookService {
             throw new IllegalArgumentException("Author is required.");
         }
         bookRepository.save(new Book(request.getTitle(), request.getAuthor(), request.getPublisher(), request.getPlot(), request.getCategory(), request.getBookNum()));
+    }
+
+    public List<Book> findBooks() {
+        return bookRepository.findAll();
+    }
+
+    public Book detailBook(Long bookId) {
+        //해당 bookId로 DB에서 책 존재하는지 확인
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found"));
+
     }
 }

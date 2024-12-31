@@ -2,12 +2,14 @@ package com.example.jwt.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.logging.log4j.util.Lazy;
 
 @Table(name = "Books")
 @Entity
 @Getter @Setter
+@NoArgsConstructor
 public class Book {
 
     @Id
