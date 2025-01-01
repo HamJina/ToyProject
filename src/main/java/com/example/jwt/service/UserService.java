@@ -21,11 +21,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findByUsername(userId)
                 .orElseThrow(IllegalArgumentException::new);
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUserId())
+                .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .authorities("USER")
                 .build();
@@ -33,12 +33,12 @@ public class UserService implements UserDetailsService {
 
     //회원가입기능
     public User joinUser(UserDto userDto) {
-        if(userRepository.existsByUserId(userDto.getUserId())) {
+        if(userRepository.existsByUsername(userDto.getUsername())) {
             throw new IllegalArgumentException();
         }
 
         User user = new User();
-        user.setUserId(userDto.getUserId());
+        user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setName(userDto.getName());
 
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
 
     // 사용자 이름 조회 기능 추가
     public String getUserNameByUserId(String userId) {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findByUsername(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
         return user.getName();
     }
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
 
     // 사용자 정보 조회 기능 추가
     public User getUserByUserId(String userId) {
-        return userRepository.findByUserId(userId)
+        return userRepository.findByUsername(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + userId));
     }
 }

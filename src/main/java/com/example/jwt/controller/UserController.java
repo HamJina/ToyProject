@@ -34,7 +34,7 @@ public class UserController {
     //회원가입
     @PostMapping("/join")
     public ResponseEntity<Map<String, String>> joinUser(@RequestBody UserDto request) {
-        System.out.println("userDto" + request.getUserId());
+        System.out.println("userDto" + request.getUsername());
         userService.joinUser(request);
 
         //응답 메시지 생성
@@ -50,7 +50,7 @@ public class UserController {
         try {
             // 사용자 인증 시도
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUserId(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
 
             // 인증 성공 시 JWT 토큰 생성
@@ -81,8 +81,5 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userService.getUserByUserId(authentication.getName());
-    }
+
 }
