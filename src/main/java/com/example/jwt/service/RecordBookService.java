@@ -1,6 +1,7 @@
 package com.example.jwt.service;
 
 import com.example.jwt.dto.request.SaveBookRecordRequest;
+import com.example.jwt.dto.response.RecordBookResponse;
 import com.example.jwt.entity.Book;
 import com.example.jwt.entity.RecordBook;
 import com.example.jwt.entity.User;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,5 +37,17 @@ public class RecordBookService {
         // RecordBook 생성 및 저장
         RecordBook recordBook = new RecordBook(findBook, request.getContent(), LocalDate.now(), currentUser);
         recordBookRepository.save(recordBook);
+    }
+
+    public List<RecordBookResponse> findRecordBooks() {
+        List<RecordBook> recordBooks = recordBookRepository.findAll();
+
+        LocalDate updatedDate = LocalDate.now();
+        return recordBooks.stream().map((recordBook) ->
+                new RecordBookResponse(recordBook.getBook().getTitle(),
+                        recordBook.getContent(),
+                        updatedDate
+                ))
+                .collect(Collectors.toList());
     }
 }
