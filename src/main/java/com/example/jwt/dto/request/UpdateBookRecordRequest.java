@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class UpdateBookRecordRequest {
 
-    private Long bookId;
-    private String cocntent;
+    private Long recordBookId;
+    private String content;
 }

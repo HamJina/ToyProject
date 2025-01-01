@@ -87,9 +87,14 @@ public class RecordBookController {
 
     //독서기록 내용 수정
     @PutMapping("/record")
-    public void updateRecordBook(@RequestBody UpdateBookRecordRequest request) {
+    public ResponseEntity<Map<String, Object>> updateRecordBook(@RequestBody UpdateBookRecordRequest request) {
         recordBookService.updateRecordBook(request);
 
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "독서기록이 성공적으로 수정되었습니다.");
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 
     private User getCurrentUser() {

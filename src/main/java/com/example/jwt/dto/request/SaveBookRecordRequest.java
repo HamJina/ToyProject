@@ -8,6 +8,6 @@ import java.time.LocalDate;
 public class SaveBookRecordRequest {
 
     private Long bookId;
-    private String cocntent;
+    private String content;
 
 }
