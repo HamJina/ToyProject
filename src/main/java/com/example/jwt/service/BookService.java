@@ -1,6 +1,8 @@
 package com.example.jwt.service;
 
+import com.example.jwt.dto.BookDTO;
 import com.example.jwt.dto.request.SaveBookRequest;
+import com.example.jwt.dto.request.SearchTitleRequest;
 import com.example.jwt.entity.Book;
 import com.example.jwt.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +40,13 @@ public class BookService {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found"));
 
+    }
+
+    public List<BookDTO> searhBooks(String searchTitle) {
+        List<BookDTO> bookDTOS = bookRepository.searchBooks(searchTitle);
+        if(bookDTOS.isEmpty()) {
+            new IllegalArgumentException("해당 제목의 도서가 존재하지 않습니다.");
+        }
+        return bookDTOS;
     }
 }

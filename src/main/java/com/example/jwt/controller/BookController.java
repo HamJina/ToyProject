@@ -1,6 +1,8 @@
 package com.example.jwt.controller;
 
+import com.example.jwt.dto.BookDTO;
 import com.example.jwt.dto.request.SaveBookRequest;
+import com.example.jwt.dto.request.SearchTitleRequest;
 import com.example.jwt.entity.Book;
 import com.example.jwt.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -47,11 +49,25 @@ public class BookController {
         return ResponseEntity.ok(response);
     }
 
-    /*//도서 이름으로 도서 검색
+    //도서 이름으로 도서 검색
     @GetMapping("/book/search")
-    public ResponseEntity<Map<String, Object>> searchBooks(@RequestParam String title) {
+    public ResponseEntity<Map<String, Object>> searchBooks(@RequestParam String searchTitle) {
+        List<BookDTO> bookDTOS = bookService.searhBooks(searchTitle);
 
-    }*/
+        if(bookDTOS.isEmpty()) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+            errorResponse.put("message", "Book not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("searchedList", bookDTOS);
+        System.out.println("searchedList" + bookDTOS);
+
+        return ResponseEntity.ok(response);
+    }
 
     //도서 상세 조회
     @GetMapping("/book/{id}")
