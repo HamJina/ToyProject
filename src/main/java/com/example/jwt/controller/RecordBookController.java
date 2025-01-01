@@ -1,6 +1,8 @@
 package com.example.jwt.controller;
 
 import com.example.jwt.dto.request.SaveBookRecordRequest;
+import com.example.jwt.dto.request.UpdateBookRecordRequest;
+import com.example.jwt.dto.response.RecordBookDetail;
 import com.example.jwt.dto.response.RecordBookResponse;
 import com.example.jwt.entity.User;
 import com.example.jwt.service.RecordBookService;
@@ -57,6 +59,37 @@ public class RecordBookController {
         response.put("status", HttpStatus.OK.value());
 
         return ResponseEntity.ok(response);
+    }
+
+    //독서기록장 삭제
+    @DeleteMapping("/record/{recordBookId}")
+    public ResponseEntity<Map<String, Object>> deleteRecordBook(@PathVariable Long recordBookId) {
+        recordBookService.deleteRecordBook(recordBookId);
+
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "독서기록이 성공적으로 삭제되었습니다.");
+        response.put("status", HttpStatus.OK.value());
+
+        return ResponseEntity.ok(response);
+    }
+
+    //독서기록 상세조회
+    @GetMapping("/record/{recordBookId}")
+    public ResponseEntity<Map<String, Object>> detailRecordBook(@PathVariable Long recordBookId) {
+        RecordBookDetail recordBookDetail = recordBookService.detailRecordBook(recordBookId);
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("recordBookDetails", recordBookDetail);
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    //독서기록 내용 수정
+    @PutMapping("/record")
+    public void updateRecordBook(@RequestBody UpdateBookRecordRequest request) {
+        recordBookService.updateRecordBook(request);
+
     }
 
     private User getCurrentUser() {

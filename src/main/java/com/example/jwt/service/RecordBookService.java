@@ -1,6 +1,7 @@
 package com.example.jwt.service;
 
 import com.example.jwt.dto.request.SaveBookRecordRequest;
+import com.example.jwt.dto.response.RecordBookDetail;
 import com.example.jwt.dto.response.RecordBookResponse;
 import com.example.jwt.entity.Book;
 import com.example.jwt.entity.RecordBook;
@@ -44,10 +45,26 @@ public class RecordBookService {
 
         LocalDate updatedDate = LocalDate.now();
         return recordBooks.stream().map((recordBook) ->
-                new RecordBookResponse(recordBook.getBook().getTitle(),
+                new RecordBookResponse(
+                        recordBook.getId(),
+                        recordBook.getBook().getTitle(),
                         recordBook.getContent(),
                         updatedDate
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteRecordBook(Long recordBookId) {
+        RecordBook recordBook = recordBookRepository.findById(recordBookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 독서기록이 존재하지 않습니다."));
+        recordBookRepository.delete(recordBook);
+    }
+
+    public RecordBookDetail detailRecordBook(Long recordBookId) {
+        RecordBook recordBook = recordBookRepository.findById(recordBookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 독서기록이 존재하지 않습니다."));
+
+        return new RecordBookDetail(recordBookId, recordBook.getBook().getTitle(), recordBook.getContent(), recordBook.getUpdatedDate(), recordBook.isLiked());
+
     }
 }
