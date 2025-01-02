@@ -1,6 +1,7 @@
 package com.example.jwt.service;
 
 import com.example.jwt.dto.request.LoanBookRequest;
+import com.example.jwt.dto.response.LoanResponse;
 import com.example.jwt.entity.Book;
 import com.example.jwt.entity.Loan;
 import com.example.jwt.entity.User;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,5 +46,23 @@ public class LoanService {
         loanRepository.save(loan);
 
         findBook.minusBookNum();
+    }
+
+    public List<LoanResponse> loanList(User user) {
+        List<Loan> loanByUser = loanRepository.findByUserId(user.getId());
+        if (loanByUser.isEmpty()) {
+            throw new IllegalArgumentException("대출도서가 존재하지 않습니다.");
+        }
+
+        // Loan 객체를 LoanResponse 객체로 변환하여 반환
+        return loanByUser.stream()
+                .map(loan -> new LoanResponse(
+                        loan.getId(),
+                        loan.getBook().getTitle(),
+                        loan.getBook().getAuthor(),
+                        loan.getLoanDate(),
+                        loan.getReturnDate()
+                ))
+                .collect(Collectors.toList());
     }
 }

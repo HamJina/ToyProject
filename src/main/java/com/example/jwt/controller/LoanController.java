@@ -2,6 +2,8 @@ package com.example.jwt.controller;
 
 
 import com.example.jwt.dto.request.LoanBookRequest;
+import com.example.jwt.dto.response.LoanResponse;
+import com.example.jwt.entity.Loan;
 import com.example.jwt.entity.User;
 import com.example.jwt.service.LoanService;
 import com.example.jwt.service.UserService;
@@ -10,12 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,6 +35,29 @@ public class LoanController {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Book registered successfully");
         response.put("status", HttpStatus.CREATED.value());
+
+        return ResponseEntity.ok(response);
+    }
+
+    //대출목록조회
+    @GetMapping("/loan")
+    public ResponseEntity<Map<String, Object>> loanList() {
+        User currentUser = getCurrentUser();
+        List<LoanResponse> loanList = loanService.loanList(currentUser);
+
+        if(loanList.isEmpty()) {
+            // 응답 데이터 구성
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "독서기록이 존재하지 않습니다.");
+            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("loanList", loanList);
+        response.put("status", HttpStatus.OK.value());
 
         return ResponseEntity.ok(response);
     }
