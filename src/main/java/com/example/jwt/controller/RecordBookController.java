@@ -1,5 +1,7 @@
 package com.example.jwt.controller;
 
+import com.example.jwt.dto.request.LikeRecordBook;
+import com.example.jwt.dto.request.LoanBookRequest;
 import com.example.jwt.dto.request.SaveBookRecordRequest;
 import com.example.jwt.dto.request.UpdateBookRecordRequest;
 import com.example.jwt.dto.response.RecordBookDetail;
@@ -8,6 +10,7 @@ import com.example.jwt.entity.User;
 import com.example.jwt.service.RecordBookService;
 import com.example.jwt.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.message.AsynchronouslyFormattable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -95,6 +98,19 @@ public class RecordBookController {
         response.put("message", "독서기록이 성공적으로 수정되었습니다.");
         response.put("status", HttpStatus.OK.value());
         return ResponseEntity.ok(response);
+    }
+
+    //독서기록장 즐겨찾기
+    @PutMapping("/record/like")
+    public ResponseEntity<Map<String, Object>> likeRecordBook(@RequestBody LikeRecordBook request) {
+        recordBookService.likeRecordBook(request.getRecordBookId());
+
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "독서기록 즐겨찾기가 성공적으로 설정되었습니다.");
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+
     }
 
     private User getCurrentUser() {

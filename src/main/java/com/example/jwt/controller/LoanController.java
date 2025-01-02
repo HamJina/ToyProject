@@ -62,6 +62,19 @@ public class LoanController {
         return ResponseEntity.ok(response);
     }
 
+    //반납하기
+    @DeleteMapping("/return")
+    public ResponseEntity<Map<String, Object>> returnBook(@RequestParam Long loanId) {
+        loanService.returnBook(loanId);
+
+        // 응답 데이터 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "반납되었습니다.");
+        response.put("status", HttpStatus.OK.value());
+
+        return ResponseEntity.ok(response);
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userService.getUserByUserId(authentication.getName());

@@ -42,6 +42,11 @@ public class Book {
         this.bookNum = bookNum;
     }
 
+    public void plusBookNum() {
+            this.bookNum += 1;
+
+    }
+
     public void minusBookNum() {
         if(bookNum > 0) {
             this.bookNum -= 1;

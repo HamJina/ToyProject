@@ -65,4 +65,11 @@ public class LoanService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public void returnBook(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new IllegalArgumentException("대출도서가 존재하지 않습니다."));
+        loanRepository.delete(loan);
+        loan.getBook().plusBookNum();
+    }
 }

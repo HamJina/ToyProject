@@ -76,4 +76,10 @@ public class RecordBookService {
         LocalDate updatedDate = LocalDate.now();
         recordBook.setUpdatedDate(updatedDate);
     }
+
+    public void likeRecordBook(Long recordBookId) {
+        RecordBook recordBook = recordBookRepository.findById(recordBookId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 독서기록이 존재하지 않습니다."));
+        recordBook.setLiked(!recordBook.isLiked());
+    }
 }
